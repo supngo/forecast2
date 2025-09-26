@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta http-equiv="refresh" content="600" />
+
+  <!-- CSS and JS -->
+  <link th:href="@{/css/main.css}" rel="stylesheet" />
+  <script th:src="@{/js/main.js}"></script>
+  <script th:src="@{/js/skycons.js}"></script>
+</head>
+
+<body onload="startTime()">
+  <div class="flex-container">
+    <div class="flex-item">
+      <div id="date" class="title1"></div>
+      <span class="title1_lunar">
+        <img th:src="@{/images/01n.png}" width="48px" height="48px" />
+        &nbsp;<span th:text="${lunarDate}"></span>
+      </span>
+      <div id="time" class="title2"></div>
+      <span class="title1" th:text="${city} + ', ' + ${state} + ' ' + ${country}"></span>
+    </div>
+
+    <div class="flex-item">
+      <span class="righty">
+        <span class="title3">
+          Hi: <span th:text="${tempMax}"></span>°&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          Lo: <span th:text="${tempMin}"></span>°
+        </span>
+
+        <span class="title4">
+          <canvas class="icon1" id="mainIcon" width="160px" height="160px"></canvas>
+          &nbsp;<span th:text="${tempString}"></span>°F
+        </span>
+
+        <span class="title5">
+          <table>
+            <tr th:each="listValue, iterStat : ${forecast}">
+              <td th:text="${listValue.dayOfWeek}"></td>
+              <td style="padding-left:60px">
+                <canvas th:id="'icon_' + ${iterStat.index}" class="icon2" width="70px" height="70px"></canvas>
+                 <!-- Inline script per row -->
+                <script th:inline="javascript">
+                  /*<![CDATA[*/
+                  var skycons = new Skycons({ color: 'white' });
+                  var canvasId = 'icon_' + '[[${iterStat.index}]]';
+                  var iconName = '[[${listValue.icon}]]';
+                  skycons.add(canvasId, Skycons[iconName.substring(1, iconName.length-1)]);
+                  skycons.play();
+                  /*]]>*/
+                </script>
+              </td>
+              <td style="padding-left:20px" th:text="${listValue.hiTemp} + '°'"></td>
+              <td style="padding-left:40px" th:text="${listValue.loTemp} + '°'"></td>
+            </tr>
+          </table>
+        </span>
+        <script th:inline="javascript">
+          /*<![CDATA[*/
+          var skycons = new Skycons({ color: 'white' });
+          var mainIconName = '[[${wIcon}]]';
+          var main = mainIconName.substring(1,mainIconName.length-1);
+          skycons.add("mainIcon", Skycons[main]);
+          skycons.play();
+          /*]]>*/
+        </script>
+      </span>
+    </div>
+  </div>
+</body>
+
+</html>

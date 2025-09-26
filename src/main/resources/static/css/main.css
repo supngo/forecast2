@@ -1,0 +1,79 @@
+body {
+    background-color: #000000;
+}
+
+* {cursor: none;}
+
+.title1 {
+	font-size: 4em;
+	font-family: "Helvetica Neue", "Times New Roman", Times, serif;
+	color: #FFFFFF;
+}
+
+.title1_lunar {
+	font-size: 3em;
+	font-family: "Helvetica Neue", "Times New Roman", Times, serif;
+	color: #FFFFFF;
+}
+
+div.title2 {
+	display: block;
+	margin-top: 10px;
+	font-size: 12.5em;
+	font-family: "Helvetica Neue", "Times New Roman", Times, serif;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+
+span.title3 {
+	font-size: 3.3em;
+	font-family: "Helvetica Neue", "Times New Roman", Times, serif;
+	color: #FFFFFF;
+}
+
+span.title4 {
+	display: block;
+	margin-top: 0px;
+	margin-bottom: -10px;
+	font-size: 9em;
+	font-family: "Helvetica Neue", "Times New Roman", Times, serif;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+
+canvas.icon1 {
+	margin-bottom: -30px;
+}
+
+canvas.icon2 {
+	margin-bottom: -20px;
+}
+
+span.title5 {
+	display: block;
+	font-size: 3.0em;
+	font-family: "Helvetica Neue", "Times New Roman", Times, serif;
+	color: #FFFFFF;
+}
+
+span.title6 {
+	display: block;
+	font-size: 1em;
+	font-family: "Helvetica Neue", "Times New Roman", Times, serif;
+	color: #FFFFFF;
+}
+
+span.righty {
+	float:right;
+}
+
+.flex-container {
+    display: -webkit-flex;
+    display: flex;
+    width: 100%;
+}
+
+.flex-item {
+    width: 50%;
+    margin: 10px;
+}
