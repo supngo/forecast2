@@ -77,7 +77,6 @@ public class BaseController {
 		model.addAttribute("tempString", temp);
 		model.addAttribute("tempMin", min);
 		model.addAttribute("tempMax", max);
-		System.out.println(appSingleton.getWeatherSymbols().get(icon).toUpperCase());
 		model.addAttribute("wIcon", appSingleton.getWeatherSymbols().get(icon).toUpperCase());
 		model.addAttribute("country", location[0]);
 		model.addAttribute("state", location[1]);
