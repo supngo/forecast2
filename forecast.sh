@@ -18,4 +18,4 @@ case "$1" in
 esac
 
 #mvn clean install
-java -jar target/forecast-1.0.war
+java -jar target/forecast-1.0.jar
