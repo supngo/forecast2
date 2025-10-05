@@ -35,4 +35,4 @@ Name=Chromium Browser (Delayed)
 Exec=sh -c "sleep 60 && chromium-browser --kiosk http://localhost:8080/forecast"
 X-GNOME-Autostart-enabled=true
 ```
-4. Save the file above and reboot. After reboot, the forecase.service will start automatically to boot strap the forecast service. Then the browser will open at http://localhost:8080/forecast because of forecast.desktop
+4. Save the file above and reboot. After reboot, the forecast.service will start automatically to boot strap the forecast service. Then the browser will open at http://localhost:8080/forecast thanks to forecast.desktop
