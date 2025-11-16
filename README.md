@@ -1,24 +1,38 @@
 # Getting Started
 
-### Reference Documentation
-For further reference, please consider the following sections:
+### Run Forecast in start up (Raspberry Pi)
+1. Create a service at /etc/systemd/system (ex: forecast.service)
+   assume we store the code at /home/pi/Forecast
+```
+[Unit]
+Description=Forecast Java Service
+After=network-online.target
+Wants=network-online.target
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/3.5.6/maven-plugin)
-* [Create an OCI image](https://docs.spring.io/spring-boot/3.5.6/maven-plugin/build-image.html)
-* [Spring Web](https://docs.spring.io/spring-boot/3.5.6/reference/web/servlet.html)
 
-### Guides
-The following guides illustrate how to use some features concretely:
+[Service]
+ExecStart=/home/pi/Forecast/run.sh
+WorkingDirectory=/home/pi/Forecast
+StandardOutput=append:/home/pi/Forecast/forecast.log
+StandardError=append:/home/pi/Forecast/forecast.log
+Restart=on-failure
+User=pi
 
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
-
-### Maven Parent overrides
-
-Due to Maven's design, elements are inherited from the parent POM to the project POM.
-While most of the inheritance is fine, it also inherits unwanted elements like `<license>` and `<developers>` from the parent.
-To prevent this, the project POM contains empty overrides for these elements.
-If you manually switch to a different parent and actually want the inheritance, you need to remove those overrides.
-
+[Install]
+WantedBy=multi-user.target
+```
+2. Save the file above and run the below commands:
+```
+sudo systemctl daemon-reload
+sudo systemctl enable forecast.service
+sudo systemctl start forecast.service
+```
+3. Create desktop service at /etc/xdg/autostart (ex:forecast.desktop)
+```
+[Desktop Entry]
+Type=Application
+Name=Chromium Browser (Delayed)
+Exec=sh -c "sleep 60 && chromium-browser --kiosk http://localhost:8080/forecast"
+X-GNOME-Autostart-enabled=true
+```
+4. Save the file above and reboot. After reboot, the forecast.service will start automatically to boot strap the forecast service. Then the browser will open at http://localhost:8080/forecast thanks to forecast.desktop
