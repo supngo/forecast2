@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.ibm.icu.util.ChineseCalendar;
 import com.naturecode.forecast.credential.Credential;
-import com.naturecode.forecast.model.Forecast;
-import com.naturecode.forecast.model.AppSingleton;
+import com.naturecode.forecast.model.ForecastFull;
+import com.naturecode.forecast.util.Utils;
 
 @Controller
 public class BaseController {
@@ -42,45 +42,21 @@ public class BaseController {
 
 	@RequestMapping(value = "/forecast", method = RequestMethod.GET)
 	public String weather(ModelMap model, HttpServletRequest request) {
-		int temp = 0;
-		int icon = 0;
-		int min = 0;
-		int max = 0;
-		String[] location = new String[] { "USA", "VA", "Herndon" };
-		List<Forecast> forecast = new ArrayList<Forecast>();
-
-		AppSingleton appSingleton = AppSingleton.getInstance();
-		appSingleton.setupWeatherSymbols();
-
 		try {
-			// String latlng = Utils.getLatLngfromIp();
-			String latlng = latitude + "," + longitude;
-			location = Credential.getLocationfromLatLng(latlng);
-			// logger.info("latlng: " + latlng);
-
-			List<Integer> tempIcon = Credential.getCurrentTemp(latlng);
-			temp = tempIcon.get(0);
-			icon = tempIcon.get(1);
-
-			List<Integer> minMax = Credential.getCurrentMinMax(latlng);
-			min = minMax.get(0);
-			max = minMax.get(1);
-
-			forecast = Credential.getNext5Days(latlng);
+			String latlng = Utils.getLatLngfromIp();
+			ForecastFull result = Credential.getForecastFromWeatherApi(latlng);
+			model.addAttribute("tempString", result.getCurrentTemp());
+			model.addAttribute("tempMin", result.getLoTemp());
+			model.addAttribute("tempMax", result.getHiTemp());
+			model.addAttribute("wIcon", result.getIcon());
+			model.addAttribute("country", "USA");
+			model.addAttribute("state", result.getRegion());
+			model.addAttribute("city", result.getCity());
+			model.addAttribute("forecast", result.getForecastList());
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("Exception in weather", e.getMessage());
 		}
-
-		model.addAttribute("forecast", forecast);
-
-		model.addAttribute("tempString", temp);
-		model.addAttribute("tempMin", min);
-		model.addAttribute("tempMax", max);
-		model.addAttribute("wIcon", appSingleton.getWeatherSymbols().get(icon).toUpperCase());
-		model.addAttribute("country", location[0]);
-		model.addAttribute("state", location[1]);
-		model.addAttribute("city", location[2]);
 
 		// Getting Lunar Date
 		// Current date

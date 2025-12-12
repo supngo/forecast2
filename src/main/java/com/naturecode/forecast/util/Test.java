@@ -92,10 +92,7 @@ public class Test {
 		// e.printStackTrace();
 		// }
 
-		List<Forecast> result = Credential.getNext5Days("38.942838,-77.408236");
-		for (Forecast itr : result) {
-			System.out.println(itr);
-		}
+
 		// result.stream().forEach(itr -> {
 		// System.out.println(itr);
 		// });

@@ -7,17 +7,183 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import java.util.function.Function;
 
 public class Utils {
+	private static final Map<Integer, Map<String, String>> ICON_MAP = new HashMap<>();
+	static {
+		// --- Clear / Cloudy ---
+		putIcon(1000, "day", "clear_day");
+		putIcon(1000, "night", "clear_night");
+
+		putIcon(1003, "day", "partly_cloudy_day");
+		putIcon(1003, "night", "partly_cloudy_night");
+
+		putIcon(1006, "day", "partly_cloudy_day");
+		putIcon(1006, "night", "partly_cloudy_night");
+
+		putIcon(1009, "day", "cloudy");
+		putIcon(1009, "night", "cloudy");
+
+		putIcon(1030, "day", "fog");
+		putIcon(1030, "night", "fog");
+
+		// --- Rain / Drizzle ---
+		putIcon(1063, "day", "rain");
+		putIcon(1063, "night", "rain");
+
+		putIcon(1072, "day", "rain_snow_shower_day");
+		putIcon(1072, "night", "rain_snow_shower_night");
+
+		putIcon(1150, "day", "rain");
+		putIcon(1150, "night", "rain");
+
+		putIcon(1153, "day", "rain");
+		putIcon(1153, "night", "rain");
+
+		putIcon(1168, "day", "rain");
+		putIcon(1168, "night", "rain");
+
+		putIcon(1171, "day", "rain");
+		putIcon(1171, "night", "rain");
+
+		putIcon(1180, "day", "rain");
+		putIcon(1180, "night", "rain");
+
+		putIcon(1183, "day", "rain");
+		putIcon(1183, "night", "rain");
+
+		putIcon(1186, "day", "rain");
+		putIcon(1186, "night", "rain");
+
+		putIcon(1189, "day", "rain");
+		putIcon(1189, "night", "rain");
+
+		putIcon(1192, "day", "showers_day");
+		putIcon(1192, "night", "showers_night");
+
+		putIcon(1195, "day", "showers_day");
+		putIcon(1195, "night", "showers_night");
+
+		putIcon(1198, "day", "rain");
+		putIcon(1198, "night", "rain");
+
+		putIcon(1201, "day", "showers_day");
+		putIcon(1201, "night", "showers_night");
+
+		putIcon(1240, "day", "showers_day");
+		putIcon(1240, "night", "showers_night");
+
+		putIcon(1243, "day", "rain");
+		putIcon(1243, "night", "rain");
+
+		putIcon(1246, "day", "rain");
+		putIcon(1246, "night", "rain");
+
+		// --- Snow / Sleet ---
+		putIcon(1066, "day", "snow");
+		putIcon(1066, "night", "snow");
+
+		putIcon(1069, "day", "sleet");
+		putIcon(1069, "night", "sleet");
+
+		putIcon(1114, "day", "snow");
+		putIcon(1114, "night", "snow");
+
+		putIcon(1117, "day", "snow");
+		putIcon(1117, "night", "snow");
+
+		putIcon(1204, "day", "sleet");
+		putIcon(1204, "night", "sleet");
+
+		putIcon(1207, "day", "sleet");
+		putIcon(1207, "night", "sleet");
+
+		putIcon(1210, "day", "snow");
+		putIcon(1210, "night", "snow");
+
+		putIcon(1213, "day", "snow");
+		putIcon(1213, "night", "snow");
+
+		putIcon(1216, "day", "snow");
+		putIcon(1216, "night", "snow");
+
+		putIcon(1219, "day", "snow");
+		putIcon(1219, "night", "snow");
+
+		putIcon(1222, "day", "snow");
+		putIcon(1222, "night", "snow");
+
+		putIcon(1225, "day", "snow");
+		putIcon(1225, "night", "snow");
+
+		putIcon(1249, "day", "sleet");
+		putIcon(1249, "night", "sleet");
+
+		putIcon(1252, "day", "sleet");
+		putIcon(1252, "night", "sleet");
+
+		putIcon(1255, "day", "snow");
+		putIcon(1255, "night", "snow");
+
+		putIcon(1258, "day", "snow");
+		putIcon(1258, "night", "snow");
+
+		// --- Ice / Hail ---
+		putIcon(1237, "day", "hail");
+		putIcon(1237, "night", "hail");
+
+		putIcon(1261, "day", "hail");
+		putIcon(1261, "night", "hail");
+
+		putIcon(1264, "day", "hail");
+		putIcon(1264, "night", "hail");
+
+		// --- Thunder ---
+		putIcon(1087, "day", "thunder");
+		putIcon(1087, "night", "thunder");
+
+		putIcon(1273, "day", "thunder_rain");
+		putIcon(1273, "night", "thunder_rain");
+
+		putIcon(1276, "day", "thunder_rain");
+		putIcon(1276, "night", "thunder_rain");
+
+		putIcon(1279, "day", "thunder");
+		putIcon(1279, "night", "thunder");
+
+		putIcon(1282, "day", "thunder_showers_day");
+		putIcon(1282, "night", "thunder_showers_night");
+
+		// --- Fog ---
+		putIcon(1135, "day", "fog");
+		putIcon(1135, "night", "fog");
+
+		putIcon(1147, "day", "fog");
+		putIcon(1147, "night", "fog");
+	}
+
+	private static void putIcon(int code, String timeOfDay, String icon) {
+		ICON_MAP.computeIfAbsent(code, k -> new HashMap<>()).put(timeOfDay.toLowerCase(), icon);
+	}
+
+	public static String getIcon(int code, String timeOfDay) {
+		Map<String, String> timeMap = ICON_MAP.get(code);
+		if (timeMap == null) {
+			return null; // or throw exception
+		}
+		return timeMap.get(timeOfDay.toLowerCase()).toUpperCase();
+	}
+
+	// Example usage
+	public static void main(String[] args) {
+		System.out.println(getIcon(1000, "day")); // clear_day
+		System.out.println(getIcon(1000, "night")); // clear_night
+		System.out.println(getIcon(1276, "day")); // thunder_rain
+	}
+
 	public static String getUTCDateTime() {
 		String result = null;
 		LocalDateTime ldt = LocalDateTime.now();
@@ -58,77 +224,8 @@ public class Utils {
 		return "NA";
 	}
 
-	public static Map<String, Double> getAverage(JsonNode node, String type) {
-		Map<String, List<Double>> avg = new LinkedHashMap<String, List<Double>>();
-		List<String> keeper = new ArrayList<String>();
-		List<Double> temp = new ArrayList<Double>();
-		node.forEach(itr -> {
-			String dow = getDayOfWeek(itr.get("date").asText());
-			double min = itr.get("value").asDouble();
-			if (keeper.contains(dow)) {
-				temp.add(min);
-			} else {
-				if (!temp.isEmpty()) {
-					String dayOfWeek = keeper.get(keeper.size() - 1);
-					avg.put(dayOfWeek, temp.stream().collect(Collectors.toList()));
-					temp.clear();
-				}
-				temp.add(min);
-				keeper.add(dow);
-			}
-		});
-		avg.put(keeper.get(keeper.size() - 1), temp);
-
-		Map<String, Double> avgList = new LinkedHashMap<String, Double>();
-		for (Map.Entry<String, List<Double>> entry : avg.entrySet()) {
-			double value = 0;
-			if (type.equals("min")) {
-				value = Math.round(entry.getValue().stream().mapToDouble(a -> a).min().getAsDouble());
-			} else if (type.equals("max")) {
-				value = Math.round(entry.getValue().stream().mapToDouble(a -> a).max().getAsDouble());
-			} else {
-				Map<Double, Long> mostFreq = entry.getValue().stream()
-						.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-				value = mostFreq.entrySet().stream().max((o1, o2) -> o1.getValue().compareTo(o2.getValue()))
-						.map(Map.Entry::getKey).orElse(null);
-			}
-			avgList.put(entry.getKey(), value);
-		}
-		return avgList;
-	}
-
 	public static String getLatLngfromIp() {
 		String result = "38.942838,-77.408236";
-		// try {
-		// LookupService cl;
-		// File file =
-		// InputStreamtoFile(Utils.class.getResourceAsStream("/GeoLiteCity.dat"));
-		// cl = new LookupService(file, LookupService.GEOIP_MEMORY_CACHE |
-		// LookupService.GEOIP_CHECK_CACHE);
-		// URL whatismyip = new URL("http://checkip.amazonaws.com");
-		// BufferedReader in = new BufferedReader(new
-		// InputStreamReader(whatismyip.openStream()));
-		// String ip = in.readLine();
-		// Location location = cl.getLocation(ip);
-		// result = location.latitude+","+location.longitude;
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
 		return result;
 	}
-
-	// private static File InputStreamtoFile(InputStream ins) throws IOException{
-	// File file = new File("geo.dat");
-	// if (file.exists())
-	// file.delete();
-	// OutputStream out=new FileOutputStream(new File("geo.dat"));
-	// byte buf[]=new byte[1024];
-	// int len;
-	// while((len = ins.read(buf)) > 0)
-	// out.write(buf,0,len);
-	// out.close();
-	// ins.close();
-
-	// return file;
-	// }
 }

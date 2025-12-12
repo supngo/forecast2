@@ -43,7 +43,7 @@ public final class AppSingleton {
     weatherSymbols.put(13, "rain");
     weatherSymbols.put(14, "rain");
     weatherSymbols.put(15, "rain");
-    weatherSymbols.put(16, "win");
+    weatherSymbols.put(16, "wind");
 
     weatherSymbols.put(101, "clear_night");
     weatherSymbols.put(102, "partly_cloudy_night");
@@ -60,6 +60,6 @@ public final class AppSingleton {
     weatherSymbols.put(113, "rain");
     weatherSymbols.put(114, "rain");
     weatherSymbols.put(115, "rain");
-    weatherSymbols.put(116, "win");
+    weatherSymbols.put(116, "wind");
   }
 }
