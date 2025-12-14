@@ -32,7 +32,7 @@ sudo systemctl start forecast.service
 [Desktop Entry]
 Type=Application
 Name=Chromium Browser (Delayed)
-Exec=sh -c "sleep 60 && chromium-browser --kiosk http://localhost:8080/forecast"
+Exec=sh -c "sleep 60 && chromium --kiosk http://localhost:8080/forecast"
 X-GNOME-Autostart-enabled=true
 ```
 4. Save the file above and reboot. After reboot, the forecast.service will start automatically to boot strap the forecast service. Then the browser will open at http://localhost:8080/forecast thanks to forecast.desktop
@@ -59,4 +59,24 @@ That means:
 - Longitude: 07724.49250,W → 77°24.49250' W
 
 We need to convert NMEA format (degrees + minutes) into decimal degrees.
+
+### Set deafuly Audio (default is HDMI)
+type below to see where the usb audio is located
+```
+aplay -l
+```
+It will display something like
+
+```card 2: Device [USB Audio Device], device 0: USB Audio [USB Audio]```
+
+change the default audio by creating a file 
+```
+sudo nano /etc/asound.conf
+```
+and enter the below to make usb speaker as default audio
+```
+defaults.pcm.card 2
+defaults.ctl.card 2
+```
+reboot
 

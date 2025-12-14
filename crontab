@@ -1,8 +1,8 @@
 #chime
-00 08-21 * * 1,2,3,4 XDG_RUNTIME_DIR=/run/user/1000 /home/pi/Chime/chime.sh
-00 08-22 * * 5 XDG_RUNTIME_DIR=/run/user/1000 /home/pi/Chime/chime.sh
-00 09-22 * * 6 XDG_RUNTIME_DIR=/run/user/1000 /home/pi/Chime/chime.sh
-00 09-21 * * 7 XDG_RUNTIME_DIR=/run/user/1000 /home/pi/Chime/chime.sh
+00 08-21 * * 1,2,3,4 /home/pi/Chime/chime.sh
+00 08-22 * * 5 /home/pi/Chime/chime.sh
+00 09-22 * * 6 /home/pi/Chime/chime.sh
+00 09-21 * * 7 /home/pi/Chime/chime.sh
 
 #led lights
 00 22 * * *  sudo /home/pi/uhubctl/uhubctl -a on -p 2 -l 1-1
