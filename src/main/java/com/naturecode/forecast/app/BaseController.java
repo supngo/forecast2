@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.ibm.icu.util.ChineseCalendar;
 import com.naturecode.forecast.credential.Credential;
 import com.naturecode.forecast.model.ForecastFull;
+import com.naturecode.forecast.util.GpsCache;
 import com.naturecode.forecast.util.Utils;
 
 @Controller
@@ -31,6 +32,11 @@ public class BaseController {
 	private static final String VIEW_BLANK = "blank";
 	private static final String CONTROL = "control";
 	private static final String BabyShark = "/home/pi/Work/BabyShark";
+
+	private final GpsCache cache;
+  public BaseController(GpsCache cache) {
+    this.cache = cache;
+  }
 
 	@Value("${latitude}")
 	private String latitude;
@@ -42,8 +48,13 @@ public class BaseController {
 
 	@RequestMapping(value = "/forecast", method = RequestMethod.GET)
 	public String weather(ModelMap model, HttpServletRequest request) {
+		String latlng = Utils.getLatLngfromIp();
 		try {
-			String latlng = Utils.getLatLngfromIp();
+			GpsCache.GpsFix fix = cache.getLatest();
+			if(fix != null) {
+				latlng = fix.latitude() + "," + fix.longitude();
+				logger.info("Getting Lat Lng from GPS: {}", latlng);
+			}
 			ForecastFull result = Credential.getForecastFromWeatherApi(latlng);
 			model.addAttribute("tempString", result.getCurrentTemp());
 			model.addAttribute("tempMin", result.getLoTemp());

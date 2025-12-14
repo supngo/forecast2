@@ -9,6 +9,11 @@
       "name": "longitude",
       "type": "java.lang.String",
       "description": "A description for 'longitude'"
+    },
+    {
+      "name": "gps_continous_read",
+      "type": "java.lang.Boolean",
+      "description": "Flag to indicate if getting continous lat/lng from GPS"
     }
   ]
 }
