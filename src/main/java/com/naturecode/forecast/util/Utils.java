@@ -177,13 +177,6 @@ public class Utils {
 		return timeMap.get(timeOfDay.toLowerCase()).toUpperCase();
 	}
 
-	// Example usage
-	public static void main(String[] args) {
-		System.out.println(getIcon(1000, "day")); // clear_day
-		System.out.println(getIcon(1000, "night")); // clear_night
-		System.out.println(getIcon(1276, "day")); // thunder_rain
-	}
-
 	public static String getUTCDateTime() {
 		String result = null;
 		LocalDateTime ldt = LocalDateTime.now();
