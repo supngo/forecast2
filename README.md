@@ -31,8 +31,8 @@ sudo systemctl start forecast.service
 ```
 [Desktop Entry]
 Type=Application
-Name=Chromium Browser (Delayed)
-Exec=sh -c "sleep 60 && chromium --kiosk http://localhost:8080/forecast"
+Name=Forecast Browser
+Exec=/home/pi/Forecast/start_forecast.sh
 X-GNOME-Autostart-enabled=true
 ```
 4. Save the file above and reboot. After reboot, the forecast.service will start automatically to boot strap the forecast service. Then the browser will open at http://localhost:8080/forecast thanks to forecast.desktop
@@ -60,7 +60,7 @@ That means:
 
 We need to convert NMEA format (degrees + minutes) into decimal degrees.
 
-### Set deafuly Audio (default is HDMI)
+### Set Default Audio (default is HDMI)
 type below to see where the usb audio is located
 ```
 aplay -l
