@@ -1,15 +1,7 @@
 package com.naturecode.forecast.app;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.slf4j.LoggerFactory;
@@ -30,8 +22,6 @@ public class BaseController {
 	private static final String VIEW_INDEX = "index";
 	private static final String VIEW_COOLEST = "coolest";
 	private static final String VIEW_BLANK = "blank";
-	private static final String CONTROL = "control";
-	private static final String BabyShark = "/home/pi/Work/BabyShark";
 
 	private final GpsCache cache;
   public BaseController(GpsCache cache) {
@@ -97,70 +87,4 @@ public class BaseController {
 	public String blank() {
 		return VIEW_BLANK;
 	}
-
-	@RequestMapping(value = "/control", method = RequestMethod.GET)
-	public String getControl(ModelMap model) {
-		List<String> list = new ArrayList<>();
-		try (Stream<String> stream = Files.lines(Paths.get(BabyShark + "/controls.txt"))) {
-			list = stream.collect(Collectors.toList());
-			String mainStatus = list.get(0).split(":")[1];
-			String cronStatus = list.get(1).split(":")[1];
-			model.addAttribute("Main", mainStatus.toUpperCase());
-			model.addAttribute("Cron", cronStatus.toUpperCase());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return CONTROL;
-	}
-
-	@RequestMapping(value = "/control", params = "main", method = RequestMethod.POST)
-	public String toggleMain(ModelMap model) {
-		System.out.println("main");
-		List<String> list = new ArrayList<>();
-		try (Stream<String> stream = Files.lines(Paths.get(BabyShark + "/controls.txt"))) {
-			list = stream.collect(Collectors.toList());
-			String mainStatus = list.get(0).split(":")[1].equalsIgnoreCase("enable") ? "disable" : "enable";
-			String cronStatus = list.get(1).split(":")[1];
-			model.addAttribute("Main", mainStatus.toUpperCase());
-			model.addAttribute("Cron", cronStatus.toUpperCase());
-
-			// Update controls file
-			String text = "main:" + mainStatus + "\ncron:" + cronStatus;
-			Files.write(Paths.get(BabyShark + "/controls.txt"), text.getBytes());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return CONTROL;
-	}
-
-	@RequestMapping(value = "/control", params = "cron", method = RequestMethod.POST)
-	public String toggleCron(ModelMap model) {
-		System.out.println("cron");
-		List<String> list = new ArrayList<>();
-		try (Stream<String> stream = Files.lines(Paths.get(BabyShark + "/controls.txt"))) {
-			list = stream.collect(Collectors.toList());
-			String mainStatus = list.get(0).split(":")[1];
-			String cronStatus = list.get(1).split(":")[1].equalsIgnoreCase("enable") ? "disable" : "enable";
-			model.addAttribute("Main", mainStatus.toUpperCase());
-			model.addAttribute("Cron", cronStatus.toUpperCase());
-
-			// Update controls file
-			String text = "main:" + mainStatus + "\ncron:" + cronStatus;
-			Files.write(Paths.get(BabyShark + "/controls.txt"), text.getBytes());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return CONTROL;
-	}
-
-	// @RequestMapping(value = "/picture", method = RequestMethod.GET)
-	// public String picture(ModelMap model) {
-	// model.addAttribute("picture", "https://s3.amazonaws.com/thombasin/pic.jpg");
-	// return VIEW_PICTURE;
-	// }
-	// @RequestMapping(value = "/recognize", method = RequestMethod.GET)
-	// public String recognize(ModelMap model) {
-	// model.addAttribute("picture", "https://s3.amazonaws.com/thombasin/pic.jpg");
-	// return VIEW_PICTURE;
-	// }
 }
