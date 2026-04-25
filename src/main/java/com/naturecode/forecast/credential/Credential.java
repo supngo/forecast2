@@ -19,7 +19,7 @@ import com.naturecode.forecast.util.Utils;
 @Service
 public class Credential {
 
-	@Value("${weather.api.key}")
+	@Value("${weather.api.key:default}")
 	private String apiKey;
 
 	private final RestTemplate restTemplate;
