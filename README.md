@@ -11,6 +11,7 @@ Wants=network-online.target
 
 
 [Service]
+Environment="WEATHER_API_KEY=api_key"
 ExecStart=/home/pi/Forecast/run.sh
 WorkingDirectory=/home/pi/Forecast
 StandardOutput=append:/home/pi/Forecast/forecast.log
