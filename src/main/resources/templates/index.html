@@ -30,7 +30,7 @@
         </span>
 
         <span class="title4">
-          <canvas class="icon1" id="mainIcon" width="160px" height="160px"></canvas>
+          <canvas class="icon1" id="mainIcon" th:attr="data-icon=${wIcon}" width="160px" height="160px"></canvas>
           &nbsp;<span th:text="${tempString}"></span>°F
         </span>
 
@@ -39,31 +39,19 @@
             <tr th:each="listValue, iterStat : ${forecast}">
               <td th:text="${listValue.dayOfWeek}"></td>
               <td style="padding-left:60px">
-                <canvas th:id="'icon_' + ${iterStat.index}" class="icon2" width="70px" height="70px"></canvas>
-                 <!-- Inline script per row -->
-                <script th:inline="javascript">
-                  /*<![CDATA[*/
-                  var skycons = new Skycons({ color: 'white' });
-                  var canvasId = 'icon_' + '[[${iterStat.index}]]';
-                  var iconName = '[[${listValue.icon}]]';
-                  skycons.add(canvasId, Skycons[iconName.substring(1, iconName.length-1)]);
-                  skycons.play();
-                  /*]]>*/
-                </script>
+                <canvas th:id="'icon_' + ${iterStat.index}" th:attr="data-icon=${listValue.icon}" class="icon2" width="70px" height="70px"></canvas>
               </td>
               <td style="padding-left:20px" th:text="${listValue.hiTemp} + '°'"></td>
               <td style="padding-left:40px" th:text="${listValue.loTemp} + '°'"></td>
             </tr>
           </table>
         </span>
-        <script th:inline="javascript">
-          /*<![CDATA[*/
+        <script>
           var skycons = new Skycons({ color: 'white' });
-          var mainIconName = '[[${wIcon}]]';
-          var main = mainIconName.substring(1,mainIconName.length-1);
-          skycons.add("mainIcon", Skycons[main]);
+          document.querySelectorAll('[data-icon]').forEach(function(canvas) {
+            skycons.add(canvas.id, Skycons[canvas.dataset.icon]);
+          });
           skycons.play();
-          /*]]>*/
         </script>
       </span>
     </div>

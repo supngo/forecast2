@@ -3,14 +3,15 @@ package com.naturecode.forecast.util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.ibm.icu.util.ChineseCalendar;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class Utils {
 	private static final Map<Integer, Map<String, String>> ICON_MAP = new HashMap<>();
 	static {
@@ -172,37 +173,10 @@ public class Utils {
 	public static String getIcon(int code, String timeOfDay) {
 		Map<String, String> timeMap = ICON_MAP.get(code);
 		if (timeMap == null) {
-			return null; // or throw exception
+			return "CLOUDY";
 		}
-		return timeMap.get(timeOfDay.toLowerCase()).toUpperCase();
-	}
-
-	public static String getUTCDateTime() {
-		String result = null;
-		LocalDateTime ldt = LocalDateTime.now();
-		ZonedDateTime ldtZoned = ldt.atZone(ZoneId.systemDefault());
-		ZonedDateTime utcZoned = ldtZoned.withZoneSameInstant(ZoneId.of("UTC"));
-		result = utcZoned.toLocalDateTime().toString().split("\\.")[0] + "Z";
-		return result;
-	}
-
-	public static String getUTCDate(int offset) {
-		String result = null;
-		LocalDate currentdate = LocalDate.now();
-		LocalDate to = currentdate.plusDays(offset);
-		int currentDay = to.getDayOfMonth();
-		int currentYear = to.getYear();
-		int currentMonth = to.getMonth().getValue();
-		LocalDateTime ldt;
-		if (offset == 5) {
-			ldt = LocalDateTime.of(currentYear, currentMonth, currentDay, 18, 0, 0);
-		} else {
-			ldt = LocalDateTime.of(currentYear, currentMonth, currentDay, 0, 0, 0);
-		}
-		ZonedDateTime ldtZoned = ldt.atZone(ZoneId.systemDefault());
-		ZonedDateTime utcZoned = ldtZoned.withZoneSameInstant(ZoneId.of("UTC"));
-		result = utcZoned.toLocalDateTime().toString().split("\\.")[0] + "Z";
-		return result;
+		String icon = timeMap.get(timeOfDay.toLowerCase());
+		return icon != null ? icon.toUpperCase() : "CLOUDY";
 	}
 
 	public static String getDayOfWeek(String dateStr) {
@@ -212,13 +186,23 @@ public class Utils {
 			DateFormat format2 = new SimpleDateFormat("EEE");
 			return format2.format(date);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			log.error("Failed to parse date string: {}", dateStr, e);
 		}
 		return "NA";
 	}
 
-	public static String getLatLngfromIp() {
-		String result = "38.942838,-77.408236";
-		return result;
+	public static String getLunarDate() {
+		Date today = new Date();
+
+    // Convert to Chinese Lunar Calendar
+    ChineseCalendar lunarCal = new ChineseCalendar();
+    lunarCal.setTime(today);
+
+    // Get lunar month and day
+    int lunarMonth = lunarCal.get(Calendar.MONTH) + 1; // Months are 0-based
+    int lunarDay = lunarCal.get(Calendar.DAY_OF_MONTH);
+		String lunarDate =  "Month " + lunarMonth + ", Day " + lunarDay;
+
+		return lunarDate;
 	}
 }

@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: forecast
+
+latitude: 38.942838
+longitude: -77.408236
+
+gps:
+  port: /dev/ttyACM0
+  continuous-read: false
+
+weather:
+  api:
+    key: ${WEATHER_API_KEY}

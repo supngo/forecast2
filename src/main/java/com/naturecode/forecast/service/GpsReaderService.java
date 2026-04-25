@@ -4,6 +4,7 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.naturecode.forecast.util.GpsCache;
 
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,12 +13,16 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.time.Instant;
 
+@Slf4j
 @Service
 public class GpsReaderService {
   private final GpsCache cache;
 
-  @Value("${gps_continous_read: false}")
-  private boolean isContinous;
+  @Value("${gps.port}")
+  private String gpsPort;
+
+  @Value("${gps.continuous-read}")
+  private boolean isContinuous;
 
   public GpsReaderService(GpsCache cache) {
     this.cache = cache;
@@ -31,7 +36,7 @@ public class GpsReaderService {
   }
 
   private void readLoop() {
-    SerialPort port = SerialPort.getCommPort("/dev/ttyACM0");
+    SerialPort port = SerialPort.getCommPort(gpsPort);
     port.setComPortParameters(9600, 8,
         SerialPort.ONE_STOP_BIT,
         SerialPort.NO_PARITY);
@@ -42,7 +47,8 @@ public class GpsReaderService {
         0);
 
     if (!port.openPort()) {
-      throw new IllegalStateException("Cannot open GPS USB");
+      log.error("Cannot open GPS port: {}", gpsPort);
+      return;
     }
 
     try (BufferedReader reader = new BufferedReader(new InputStreamReader(port.getInputStream()))) {
@@ -51,15 +57,15 @@ public class GpsReaderService {
         if (line.startsWith("$GPRMC") || line.startsWith("$GNRMC")) {
           GpsCache.GpsFix fix = parseRMC(line);
           if (fix != null) {
-            cache.update(fix); // ✅ publish latest fix
-            if (!isContinous) {
+            cache.update(fix);
+            if (!isContinuous) {
               break;
             }
           }
         }
       }
     } catch (Exception e) {
-      e.printStackTrace(); // consider restart strategy
+      log.error("GPS read loop failed", e);
     } finally {
       port.closePort();
     }
